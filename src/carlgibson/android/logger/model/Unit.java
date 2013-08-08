@@ -8,4 +8,11 @@ public class Unit {
         this.name = name;
         this.defaultValue = defaultValue;
     }
+
+    public String getName() { return this.name; }
+    public int getDefault() { return this.defaultValue; }
+
+    public String ToString() {
+        return name;
+    }
 }
