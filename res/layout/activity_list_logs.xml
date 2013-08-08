@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:orientation="vertical">
+     <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/textViewFilter"
+                android:text="@string/app_name"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                  />
+    </LinearLayout>
+     <ListView
+            android:id="@android:id/list"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"/>
+    <Button
+            android:id="@+id/buttonAddNewLog"
+            android:text="@string/title_activity_add_log_entry"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            />
+</LinearLayout>

@@ -1,0 +1,159 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context=".MainActivity">
+
+    <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="9">
+
+        <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/topic"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <Spinner
+                android:id="@+id/spinnerTopic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:prompt="@string/spinnerPrompt"
+                android:layout_gravity="right"/>
+
+        <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <Spinner
+                android:id="@+id/spinnerItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:prompt="@string/item"
+                tools:listitem="@android:layout/simple_spinner_item"/>
+
+        <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quantity"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/editTextQty"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:maxWidth="80dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/initialQty" android:clickable="true"
+                    android:onClick="onShowNumberPickerDialog"/>
+
+            <Spinner
+                    android:id="@+id/spinnerQty"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:prompt="@string/quantity"
+                    tools:listitem="@android:layout/simple_spinner_item"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/textDatePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:clickable="true"
+                    android:onClick="onShowDatePickerDialog"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    />
+
+            <TextView
+                    android:id="@+id/textTimePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:clickable="true"
+                    android:onClick="onShowTimePickerDialog"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    />
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/textViewDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:orientation="vertical">
+
+            <EditText
+                    android:id="@+id/editTextDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:ems="10"
+                    android:fitsSystemWindows="true"
+                    android:gravity="top|left"
+                    android:inputType="textMultiLine"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
+
+        <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/logNewEntry"/>
+        <Button
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/cancelLogEntry"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
