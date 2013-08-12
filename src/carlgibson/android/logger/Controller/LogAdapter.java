@@ -14,21 +14,21 @@ import java.util.List;
 public class LogAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
-    private List<Log> list;
+    private List<Log> logs;
 
-    public LogAdapter(Context context, List<Log> list) {
-        this.list = list;
+    public LogAdapter(Context context, List<Log> logs) {
+        this.logs = logs;
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return logs.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return logs.get(position);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class LogAdapter extends BaseAdapter {
         TextView date = (TextView) convertView.findViewById(R.id.dateRowText);
         TextView time = (TextView) convertView.findViewById(R.id.timeRowText);
 
-        Log log = list.get(position);
+        Log log = logs.get(position);
         item.setText(log.getItem());
         qty.setText(log.getQuantity()+" "+log.getUnits());
         date.setText(log.getFormattedDate("dd MMM yy"));
@@ -59,7 +59,7 @@ public class LogAdapter extends BaseAdapter {
 
     public void swapData(List<Log> newLogs)
     {
-        this.list = newLogs;
+        this.logs = newLogs;
         notifyDataSetChanged();
     }
 

@@ -3,10 +3,13 @@ package carlgibson.android.logger.DAL;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
 import carlgibson.android.logger.model.Unit;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +27,6 @@ public class SQLLogData implements LogDataSource {
         dbHelper = new DBHelper(context);
     }
 
-
     @Override
     public List<Topic> getTopics() {
         return null;
@@ -41,6 +43,26 @@ public class SQLLogData implements LogDataSource {
     }
 
     @Override
+    public List<Item> getItems() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<Item> getItems(int topicId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Item getItemById(int id) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void addItem(Item item) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public List<Log> getLogs() {
         List<Log> logs = new ArrayList<Log>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -49,28 +71,37 @@ public class SQLLogData implements LogDataSource {
         cursor.moveToFirst();
         while(!cursor.isAfterLast())
         {
+            Item item = getItemById(cursor.getInt(2));
+            Topic topic = item.getTopic();
+            Unit unit = getUnitById(cursor.getInt(3));
+            int qty =  cursor.getInt(4);
+            String desc = cursor.getString(5);
+            String dateTime = cursor.getString(1);
+            Date date = null;
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyyHH:mm");
+            try {
+                date = sdf.parse(dateTime);
+            } catch (ParseException e) {
+                date = new Date();
+            }
+
             Log log = new Log(
-                    getTopicFromItemId(),
-                    getItem(),
-                    cursor.getInt(4),
-                    getUnitById(cursor.getInt(3)).ToString(),
-                    "desc",
-                    new Date());
+                    topic.getName(),
+                    item.getName(),
+                    qty,
+                    unit.getName(),
+                    desc,
+                    date);
             logs.add(log);
         }
 
         return logs;
     }
 
-    private String getTopicFromItemId() {
-        return null;
-    }
-    private String getItem() {
-        return null;
-    }
     @Override
-    public List<Log> getLogs(Topic topic) {
-        return null;
+    public List<Log> getLogs(int topicId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -91,5 +122,10 @@ public class SQLLogData implements LogDataSource {
     @Override
     public Unit getUnitById(int id) {
         return null;
+    }
+
+    @Override
+    public void addUnit(Unit unit) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -9,18 +9,18 @@ public class Log {
 	private String item;
 	private int quantity;
 	private String quantityUnits;
-	private Date dateTime;
+	private Date date;
 	private String description;
-	
+
 	public Log(String topic, String item, int qty,
-               String units, String desc, Date dateTime)
+               String units, String desc, Date date)
 	{
 		this.topic = topic;
 		this.item =item;
 		this.quantity = qty;
 		this.quantityUnits = units;
 		this.description = desc;
-		this.dateTime = dateTime;
+		this.date = date;
 	}
 
 	public String getTopic() {
@@ -39,14 +39,14 @@ public class Log {
 		return quantityUnits;
 	}
 	
-	public Date getDateTime() {
-		return dateTime;
+	public Date getDate() {
+		return date;
 	}
 
     public String getFormattedDate(String format)
     {
         SimpleDateFormat df = new SimpleDateFormat(format);
-        return df.format(dateTime);
+        return df.format(date);
     }
 
 	
@@ -57,7 +57,7 @@ public class Log {
     @Override
     public String toString() {
         SimpleDateFormat df = new SimpleDateFormat("HH:MM dd-MMM-yy");
-        String date =  df.format(dateTime);
+        String date =  df.format(this.date);
 
         return String.format("%s %s %s %s",item,date,quantity, quantityUnits);
     }

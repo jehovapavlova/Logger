@@ -1,5 +1,6 @@
 package carlgibson.android.logger.DAL;
 
+import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
 import carlgibson.android.logger.model.Unit;
@@ -60,6 +61,26 @@ public class MockLogData implements LogDataSource {
     }
 
     @Override
+    public List<Log> getLogs() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<Log> getLogs(int topicId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Log getLog(int id) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void addLog(Log log) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public List<Topic> getTopics() {
 		return mTopics;
 	}
@@ -75,33 +96,38 @@ public class MockLogData implements LogDataSource {
     }
 
     @Override
-	public List<Log> getLogs() {
-          return mLogs;
-	}
-
-    @Override
-    public List<Log> getLogs(Topic topic) {
+    public List<Item> getItems() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Log getLog(int id) {
+    public List<Item> getItems(int topicId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void addLog(Log log) {
-        mLogs.add(log);
+    public Item getItemById(int id) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void addItem(Item item) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public List<String> getUnits() {
-            return mUnits;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public Unit getUnitById(int id) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void addUnit(Unit unit) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void addMockLogs() {

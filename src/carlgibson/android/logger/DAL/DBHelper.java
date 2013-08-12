@@ -28,7 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
             .append(COLUMN_ID)
             .append(", item integer NOT NULL")
             .append(", topicId integer NOT NULL")
-            .append(", defaultUnit integer NOT NULL")
+            .append(", defaultUnitId integer NOT NULL")
             .append(", defaultQuantity integer NOT NULL")
             .append(")")
             .toString();

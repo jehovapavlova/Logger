@@ -15,7 +15,7 @@ public class LogDataFilter implements DataFilter {
         Collections.sort(sortedLogs, new Comparator<Log>() {
             @Override
             public int compare(Log lhs, Log rhs) {
-                return rhs.getDateTime().compareTo(lhs.getDateTime());
+                return rhs.getDate().compareTo(lhs.getDate());
                                                                                   }
         });
 

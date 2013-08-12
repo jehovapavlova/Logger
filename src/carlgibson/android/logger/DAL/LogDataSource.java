@@ -1,5 +1,6 @@
 package carlgibson.android.logger.DAL;
 
+import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
 import carlgibson.android.logger.model.Unit;
@@ -16,7 +17,7 @@ import java.util.List;
 public interface LogDataSource {
 
     List<Log> getLogs();
-    List<Log> getLogs(Topic topic);
+    List<Log> getLogs(int topicId);
     Log getLog(int id);
     void addLog(Log log);
 
@@ -24,7 +25,12 @@ public interface LogDataSource {
     Topic getTopicById(int id);
     void addTopic(Topic topic);
 
+    List<Item> getItems();
+    List<Item> getItems(int topicId);
+    Item getItemById(int id);
+    void addItem(Item item);
+
     List<String> getUnits();
     Unit getUnitById(int id);
-
+    void addUnit(Unit unit);
 }
