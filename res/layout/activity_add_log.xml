@@ -70,7 +70,7 @@
                     android:onClick="onShowNumberPickerDialog"/>
 
             <Spinner
-                    android:id="@+id/spinnerQty"
+                    android:id="@+id/spinnerUnit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"

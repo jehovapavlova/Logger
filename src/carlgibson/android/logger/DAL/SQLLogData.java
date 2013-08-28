@@ -22,19 +22,42 @@ import java.util.List;
 public class SQLLogData implements LogDataSource {
 
     private final DBHelper dbHelper;
+    private SQLiteDatabase mDb;
 
     public SQLLogData(Context context) {
         dbHelper = new DBHelper(context);
     }
 
+    private SQLiteDatabase openReadable() {
+        mDb = dbHelper.getReadableDatabase();
+        return mDb;
+    }
+
     @Override
     public List<Topic> getTopics() {
-        return null;
+        List<Topic> topics = new ArrayList<Topic>();
+        Cursor cursor = openReadable().query("Topics", null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            Topic topic = new Topic(cursor.getInt(0), cursor.getString(1));
+            topics.add(topic);
+            cursor.moveToNext();
+        }
+        return topics;
     }
 
     @Override
     public Topic getTopicById(int id) {
-        return null;
+        Topic topic = null;
+
+        for (Topic t: getTopics())
+        {
+            if (t.getId()==id) topic = t;
+        }
+
+        return topic;
     }
 
     @Override
@@ -44,29 +67,57 @@ public class SQLLogData implements LogDataSource {
 
     @Override
     public List<Item> getItems() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Item> items = new ArrayList<Item>();
+        Cursor cursor = openReadable().query("Items", null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            String itemName = cursor.getString(1);
+            Integer qty = cursor.getInt(4);
+            Topic topic = getTopicById(cursor.getInt(2));
+            Unit unit = getUnitById(cursor.getInt(3));
+
+            Item item = new Item(itemName, qty, unit, topic);
+            items.add(item);
+            cursor.moveToNext();
+        }
+        return items;
     }
 
     @Override
     public List<Item> getItems(int topicId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<Item> items = new ArrayList<Item>();
+         Cursor cursor = openReadable().query("Items", null, "topicId = "+topicId, null, null, null, null);
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            String itemName = cursor.getString(1);
+            Integer qty = cursor.getInt(4);
+            Topic topic = getTopicById(cursor.getInt(2));
+            Unit unit = getUnitById(cursor.getInt(3));
+
+            Item item = new Item(itemName, qty, unit, topic);
+            items.add(item);
+            cursor.moveToNext();
+        }
+        return items;
     }
 
     @Override
     public Item getItemById(int id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public void addItem(Item item) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public List<Log> getLogs() {
         List<Log> logs = new ArrayList<Log>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query("LOGS",null,null,null,null,null,null);
+        Cursor cursor = openReadable().query("LOGS", null, null, null, null, null, null);
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast())
@@ -94,6 +145,7 @@ public class SQLLogData implements LogDataSource {
                     desc,
                     date);
             logs.add(log);
+            cursor.moveToNext();
         }
 
         return logs;
@@ -101,7 +153,7 @@ public class SQLLogData implements LogDataSource {
 
     @Override
     public List<Log> getLogs(int topicId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -111,12 +163,21 @@ public class SQLLogData implements LogDataSource {
 
     @Override
     public void addLog(Log log) {
-
     }
 
     @Override
     public List<String> getUnits() {
-        return null;
+        List<String> units = new ArrayList<String>();
+        Cursor cursor = openReadable().query("Units", null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            String unitName = cursor.getString(1);
+            units.add(unitName);
+            cursor.moveToNext();
+        }
+        return units;
     }
 
     @Override
@@ -126,6 +187,5 @@ public class SQLLogData implements LogDataSource {
 
     @Override
     public void addUnit(Unit unit) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

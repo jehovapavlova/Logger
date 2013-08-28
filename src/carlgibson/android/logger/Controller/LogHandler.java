@@ -1,7 +1,9 @@
 package carlgibson.android.logger.Controller;
 
+import android.content.Context;
 import carlgibson.android.logger.DAL.LogDataSource;
-import carlgibson.android.logger.DAL.MockLogData;
+import carlgibson.android.logger.DAL.SQLLogData;
+import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
 
@@ -15,24 +17,18 @@ public class LogHandler {
     private DataFilter mFilter;
     private static LogHandler mInstance;
 
-    public static LogHandler getInstance() {
+    public static LogHandler getInstance(Context context) {
         if (null == mInstance) {
-            mInstance = new LogHandler(true);
+            mInstance = new LogHandler(context, true);
         }
         return mInstance;
     }
 
-    private LogHandler(boolean create) {
-
-        logDataSource = MockLogData.getInstance();
+    private LogHandler(Context context,boolean create) {
+        //logDataSource = MockLogData.getInstance();
+        logDataSource = new SQLLogData(context);
         mUnits = new ArrayList<String>();
         mFilter = new LogDataFilter();
-
-        fillQuantities();
-    }
-
-    private void fillQuantities() {
-
     }
 
     public List<Topic> getTopics() {
@@ -43,7 +39,7 @@ public class LogHandler {
         return logDataSource.getLogs();
     }
 
-    public List<String> getQuantities() {
+    public List<String> getUnits() {
         return logDataSource.getUnits();
     }
 
@@ -57,4 +53,8 @@ public class LogHandler {
         return mFilter.filterLogsByDateDesc(logs);
     }
 
+    public List<Item> getItems(Topic topic)
+    {
+        return logDataSource.getItems(topic.getId());
+    }
 }

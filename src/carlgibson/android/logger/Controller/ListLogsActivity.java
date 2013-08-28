@@ -29,7 +29,7 @@ public class ListLogsActivity extends ListActivity {
             }
         });
 
-        mLogManager = LogHandler.getInstance();
+        mLogManager = LogHandler.getInstance(getApplicationContext());
 
         mAdapter = new LogAdapter(this, mLogManager.getDateDescSortedLogs());
         setListAdapter(mAdapter);

@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 import carlgibson.android.logger.R;
+import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
 
@@ -21,7 +22,7 @@ import java.util.Locale;
 
 public class AddLogActivity extends FragmentActivity {
     private LogHandler mLogManager;
-    private Spinner mTopicSpinner, mItemSpinner, mQuantitySpinner;
+    private Spinner mTopicSpinner, mItemSpinner, mUnitsSpinner;
     private DialogFragment mDatePickerFragment, mTimePickerFragment;
 
     @Override
@@ -29,11 +30,11 @@ public class AddLogActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_log);
 
-        mLogManager = LogHandler.getInstance();
+        mLogManager = LogHandler.getInstance(getApplicationContext());
 
         setTopicSpinner();
         setItemSpinner();
-        setQuantitySpinner();
+        setUnitSpinner();
         setDate();
         setTime();
         setSaveButton();
@@ -74,13 +75,13 @@ public class AddLogActivity extends FragmentActivity {
         return textView;
     }
 
-    private void setQuantitySpinner() {
-        mQuantitySpinner = (Spinner) findViewById(R.id.spinnerQty);
+    private void setUnitSpinner() {
+        mUnitsSpinner = (Spinner) findViewById(R.id.spinnerUnit);
         ArrayAdapter<String> qtyAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
-                mLogManager.getQuantities());
+                mLogManager.getUnits());
         qtyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mQuantitySpinner.setAdapter(qtyAdapter);
+        mUnitsSpinner.setAdapter(qtyAdapter);
     }
 
     private void setTopicSpinner() {
@@ -95,8 +96,8 @@ public class AddLogActivity extends FragmentActivity {
     private void setItemSpinner() {
         mItemSpinner = (Spinner) findViewById(R.id.spinnerItem);
         Topic topic = (Topic) mTopicSpinner.getSelectedItem();
-        ArrayAdapter<String> itemAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, topic.getItems());
+        ArrayAdapter<Item> itemAdapter = new ArrayAdapter<Item>(this,
+                android.R.layout.simple_spinner_item, mLogManager.getItems(topic));
         itemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mItemSpinner.setAdapter(itemAdapter);
     }
@@ -132,7 +133,7 @@ public class AddLogActivity extends FragmentActivity {
         String item = (String) mItemSpinner.getSelectedItem();
         TextView qty = (TextView) findViewById(R.id.editTextQty);
         int quantity = Integer.parseInt(qty.getText().toString());
-        String units = (String) mQuantitySpinner.getSelectedItem();
+        String units = (String) mUnitsSpinner.getSelectedItem();
         TextView desc = (TextView) findViewById(R.id.editTextDetails);
         TextView date = (TextView) findViewById(R.id.textDatePicker);
         String dateString = date.getText().toString();

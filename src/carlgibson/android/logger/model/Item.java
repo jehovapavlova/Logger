@@ -29,4 +29,10 @@ public class Item {
     public Topic getTopic() {
         return topic;
     }
+
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
 }

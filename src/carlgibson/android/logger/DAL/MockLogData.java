@@ -50,19 +50,15 @@ public class MockLogData implements LogDataSource {
     }
 
     private void addMockTopics() {
-        mTopics.add(new Topic("Exercise").addItem("Running").addItem("Swimming")
-                .addItem("Gym"));
-        mTopics.add(new Topic("Food").addItem("Crisps").addItem("Apple")
-                .addItem("Meatballs"));
-        mTopics.add(new Topic("Symptoms").addItem("Headache")
-                .addItem("Stomach ache").addItem("Rash"));
-        mTopics.add(new Topic("Relaxation").addItem("Sleep").addItem("Reading")
-                .addItem("Star gazing"));
+        mTopics.add(new Topic(0, "Exercise"));
+        mTopics.add(new Topic(1, "Food"));
+        mTopics.add(new Topic(2, "Symptoms"));
+        mTopics.add(new Topic(3, "Relaxation"));
     }
 
     @Override
     public List<Log> getLogs() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return mLogs;
     }
 
     @Override
@@ -117,7 +113,7 @@ public class MockLogData implements LogDataSource {
 
     @Override
     public List<String> getUnits() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return mUnits;
     }
 
     @Override
@@ -133,11 +129,8 @@ public class MockLogData implements LogDataSource {
     private void addMockLogs() {
         for (Topic topic : getTopics())
         {
-            for (String item : topic.getItems())
-            {
-                mLogs.add(new Log(topic.getName(), item,
+                mLogs.add(new Log(topic.getName(), "Topics item",
                                      (int) (Math.random() * 100), "Minutes", "Dummy entry", new Date()));
-            }
         }
     }
 

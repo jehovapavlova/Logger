@@ -1,8 +1,14 @@
 package carlgibson.android.logger.DAL;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,20 +19,24 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "logs.db";
-    public static final int DATABASE_VERSION = 1;
-    public static final String COLUMN_ID = "_id integer primary key autoincrement";
+    private static final String DATABASE_NAME = "logs";
+    private static final int DATABASE_VERSION = 1;
+    private static final String COLUMN_ID = "_id integer primary key autoincrement";
+    public static final String TOPICS = "Topics";
+    public static final String ITEMS = "Items";
+    public static final String LOGS = "Logs";
+    public static final String UNITS = "Units";
 
-    private static final String UNITS_TABLE = "CREATE TABLE Units ("
-            + COLUMN_ID + ", unit text NOT NULL)";
+    private static final String UNITS_TABLE = "CREATE TABLE "+ UNITS +" ("
+            + COLUMN_ID + ", unit text NOT NULL, defaultValue integer NOT NULL)";
 
-    private static final String TOPICS_TABLE = "CREATE TABLE Topics ("
-            + COLUMN_ID + "topic text NOT NULL)";
+    private static final String TOPICS_TABLE = "CREATE TABLE "+TOPICS+" ("
+            + COLUMN_ID + ", topic text NOT NULL)";
 
     private static final String ITEMS_TABLE = new StringBuilder()
-            .append("CREATE TABLE Items (")
+            .append("CREATE TABLE " + ITEMS + " (")
             .append(COLUMN_ID)
-            .append(", item integer NOT NULL")
+            .append(", item text NOT NULL")
             .append(", topicId integer NOT NULL")
             .append(", defaultUnitId integer NOT NULL")
             .append(", defaultQuantity integer NOT NULL")
@@ -34,18 +44,15 @@ public class DBHelper extends SQLiteOpenHelper {
             .toString();
 
     private static final String LOGS_TABLE = new StringBuilder()
-            .append("CREATE TABLE Logs (")
+            .append("CREATE TABLE " + LOGS + " (")
             .append(COLUMN_ID)
             .append(", time integer NOT NULL")
             .append(", itemId integer NOT NULL")
             .append(", unitId integer NOT NULL")
             .append(", quantity integer NOT NULL")
-            .append(", description integer NOT NULL")
+            .append(", description text NOT NULL")
             .append(")")
             .toString();
-
-    private static final String QUANTITIES = new StringBuilder()
-            .append("").toString();
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,79 +60,84 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        //To change body of implemented methods use File | Settings | File Templates.
         database.execSQL(UNITS_TABLE);
         database.execSQL(ITEMS_TABLE);
         database.execSQL(TOPICS_TABLE);
         database.execSQL(LOGS_TABLE);
+        fillTopics(database);
+        fillUnits(database);
+        fillItems(database);
+    }
+
+    private void fillTopics(SQLiteDatabase database) {
+        ContentValues values = new ContentValues();
+
+        List<String> topics = new ArrayList<String>();
+        topics.add("Exercise");
+        topics.add("Food");
+        topics.add("Symptoms");
+
+        for (String topic: topics)
+        {
+            values.put("topic",topic);
+            database.insert(TOPICS, null, values);
+            values.clear();
+        }
+    }
+
+    private void fillItems(SQLiteDatabase database)
+    {
+        ContentValues values = new ContentValues();
+
+        List<Object[]> items = new ArrayList<Object[]>();
+        items.add(new Object[]{"Running",1,3,5});
+        items.add(new Object[]{"Swimming",1,7,20});
+        items.add(new Object[]{"Gym",1,0,45});
+        items.add(new Object[]{"Sandwich",2,2,300});
+        items.add(new Object[]{"Toast",2,2,300});
+        items.add(new Object[]{"Salad",2,2,300});
+        items.add(new Object[]{"Stomach ache",3,0,30});
+        items.add(new Object[]{"Headache",3,0,10});
+        items.add(new Object[]{"Hives",3,0,30});
+
+        for (Object[] obj: items)
+        {
+            values.put("item",(String)obj[0]);
+            values.put("topicId",(Integer)obj[1]);
+            values.put("defaultUnitId",(Integer)obj[2]);
+            values.put("defaultQuantity",(Integer)obj[3]);
+
+            database.insert(ITEMS, null, values);
+            values.clear();
+        }
+    }
+
+    private void fillUnits(SQLiteDatabase database)
+    {
+        ContentValues values = new ContentValues();
+
+        Map<String,Integer> units = new HashMap<String, Integer>();
+        units.put("Minutes", 10);
+        units.put("Hours",1);
+        units.put("Calories",300);
+        units.put("Miles",3);
+        units.put("Metres",50);
+        units.put("Kilometres",5);
+        units.put("Each",1);
+        units.put("Lengths",20);
+
+        for (String key : units.keySet())
+        {
+            values.put("unit",key);
+            values.put("defaultValue",units.get(key));
+            database.insert(UNITS, null, values);
+            values.clear();
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+
     }
-
-    /*
-    CONSTRAINT [PK_QuantityUnits] PRIMARY KEY CLUSTERED
-            (
-            [id] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY],
-            CONSTRAINT [IX_QuantityUnits] UNIQUE NONCLUSTERED
-    (
-            [unit] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-    ) ON [PRIMARY]
-
-
-    CONSTRAINT [PK_Topics] PRIMARY KEY CLUSTERED
-            (
-            [id] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY],
-            CONSTRAINT [IX_Topics] UNIQUE NONCLUSTERED
-    (
-            [topic] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-    ) ON [PRIMARY]
-
-            CONSTRAINT [PK_Items] PRIMARY KEY CLUSTERED
-            (
-            [id] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY],
-            CONSTRAINT [IX_Items] UNIQUE NONCLUSTERED
-    (
-            [item] ASC,
-    [topicId] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-    ) ON [PRIMARY]
-
-
-            CONSTRAINT [PK_Events_1] PRIMARY KEY CLUSTERED
-            (
-            [time] ASC,
-    [itemId] ASC
-    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-    ) ON [PRIMARY]
-
-    ALTER TABLE [dbo].[Items]  WITH CHECK ADD  CONSTRAINT [FK_Items_Topics] FOREIGN KEY([topicId])
-    REFERENCES [dbo].[Topics] ([id])
-
-    ALTER TABLE [dbo].[Items] CHECK CONSTRAINT [FK_Items_Topics]
-
-    ALTER TABLE [dbo].[Items]  WITH CHECK ADD  CONSTRAINT [FK_Items_Units] FOREIGN KEY([defaultUnit])
-    REFERENCES [dbo].[Units] ([id])
-
-    ALTER TABLE [dbo].[Items] CHECK CONSTRAINT [FK_Items_Units]
-
-
-
-    ALTER TABLE [dbo].[Logs]  WITH CHECK ADD  CONSTRAINT [FK_Events_Items] FOREIGN KEY([itemId])
-    REFERENCES [dbo].[Items] ([id])
-
-    ALTER TABLE [dbo].[Logs] CHECK CONSTRAINT [FK_Events_Items]
-
-    ALTER TABLE [dbo].[Logs]  WITH CHECK ADD  CONSTRAINT [FK_Events_Units] FOREIGN KEY([unitId])
-    REFERENCES [dbo].[Units] ([id])
-
-    ALTER TABLE [dbo].[Logs] CHECK CONSTRAINT [FK_Events_Units]
-    */
 }
