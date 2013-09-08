@@ -3,14 +3,14 @@ package carlgibson.android.logger.model;
 public class Item {
     private String name;
     private int defaultQty;
-    private Unit defaultUnit;
+    private int defaultUnitId;
     private Topic topic;
 
     public Item(String name, int defaultQty,
-                Unit defaultUnit, Topic topic) {
+                int defaultUnitId, Topic topic) {
         this.name = name;
         this.defaultQty = defaultQty;
-        this.defaultUnit = defaultUnit;
+        this.defaultUnitId = defaultUnitId;
         this.topic = topic;
     }
 
@@ -22,8 +22,8 @@ public class Item {
         return defaultQty;
     }
 
-    public Unit getDefaultUnit() {
-        return defaultUnit;
+    public int getDefaultUnitId() {
+        return defaultUnitId;
     }
 
     public Topic getTopic() {

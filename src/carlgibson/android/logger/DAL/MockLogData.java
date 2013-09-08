@@ -72,8 +72,13 @@ public class MockLogData implements LogDataSource {
     }
 
     @Override
-    public void addLog(Log log) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public boolean addLog(Log log) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteLog(int id) {
+        return false;
     }
 
     @Override
@@ -129,7 +134,7 @@ public class MockLogData implements LogDataSource {
     private void addMockLogs() {
         for (Topic topic : getTopics())
         {
-                mLogs.add(new Log(topic.getName(), "Topics item",
+                mLogs.add(new Log(0,topic.getName(), "Topics item",
                                      (int) (Math.random() * 100), "Minutes", "Dummy entry", new Date()));
         }
     }

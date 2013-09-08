@@ -32,7 +32,8 @@
                 android:name=".Controller.LogDetailsActivity"
                 android:label="@string/title_activity_log_details_activity">
         </activity>
-        <activity android:name=".Controller.EditItemActivity" android:label="edit_item_activity"/>
+        <activity android:name=".Controller.EditItemActivity" android:label="EditItemActivity"/>
+        <activity android:name=".Controller.AddItemActivity" android:label="AddItemActivity"/>
     </application>
 
 </manifest>

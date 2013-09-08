@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String LOGS_TABLE = new StringBuilder()
             .append("CREATE TABLE " + LOGS + " (")
             .append(COLUMN_ID)
-            .append(", time integer NOT NULL")
+            .append(", time text NOT NULL")
             .append(", itemId integer NOT NULL")
             .append(", unitId integer NOT NULL")
             .append(", quantity integer NOT NULL")
@@ -94,10 +92,10 @@ public class DBHelper extends SQLiteOpenHelper {
         items.add(new Object[]{"Swimming",1,7,20});
         items.add(new Object[]{"Gym",1,0,45});
         items.add(new Object[]{"Sandwich",2,2,300});
-        items.add(new Object[]{"Toast",2,2,300});
-        items.add(new Object[]{"Salad",2,2,300});
-        items.add(new Object[]{"Stomach ache",3,0,30});
-        items.add(new Object[]{"Headache",3,0,10});
+        items.add(new Object[]{"Toast",2,4,300});
+        items.add(new Object[]{"Salad",2,5,300});
+        items.add(new Object[]{"Stomach ache",3,6,30});
+        items.add(new Object[]{"Headache",3,1,10});
         items.add(new Object[]{"Hives",3,0,30});
 
         for (Object[] obj: items)
@@ -116,20 +114,22 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         ContentValues values = new ContentValues();
 
-        Map<String,Integer> units = new HashMap<String, Integer>();
-        units.put("Minutes", 10);
-        units.put("Hours",1);
-        units.put("Calories",300);
-        units.put("Miles",3);
-        units.put("Metres",50);
-        units.put("Kilometres",5);
-        units.put("Each",1);
-        units.put("Lengths",20);
+        List<Object[]> units = new ArrayList<Object[]>();
+                
+        units.add(new Object[]{1,"Minutes", 10});
+        units.add(new Object[]{2,"Hours",1});
+        units.add(new Object[]{3,"Calories",300});
+        units.add(new Object[]{4,"Miles",3});
+        units.add(new Object[]{5,"Metres",50});
+        units.add(new Object[]{6,"Kilometres",5});
+        units.add(new Object[]{7,"Each",1});
+        units.add(new Object[]{8,"Lengths",20});
 
-        for (String key : units.keySet())
+        for (Object[] obj: units)
         {
-            values.put("unit",key);
-            values.put("defaultValue",units.get(key));
+            values.put("_id",(Integer)obj[0]);
+            values.put("unit",(String)obj[1]);
+            values.put("defaultValue",(Integer)obj[2]);
             database.insert(UNITS, null, values);
             values.clear();
         }

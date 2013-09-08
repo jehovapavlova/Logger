@@ -495,7 +495,7 @@ public class LogManagerTests extends AndroidTestCase {
         List<Log> l1 = sut.getDateDescSortedLogs();
         int before = l1.size();
 
-        sut.addLogEntry(new Log(null,null,1,null,null,new Date()));
+        sut.addLogEntry(new Log(0,null,null,1,null,null,new Date()));
 
         List<Log> l2 = sut.getDateDescSortedLogs();
         int after = l2.size();

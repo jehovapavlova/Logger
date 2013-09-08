@@ -1,5 +1,6 @@
 package carlgibson.android.logger.Controller;
 
+import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
 
@@ -28,7 +29,7 @@ public class LogDataFilter implements DataFilter {
     }
 
     @Override
-    public List<Log> filterLogsByItem(List<Log> logs, String item) {
+    public List<Log> filterLogsByItem(List<Log> logs, Item item) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

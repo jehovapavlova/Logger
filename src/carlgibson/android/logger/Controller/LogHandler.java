@@ -24,8 +24,7 @@ public class LogHandler {
         return mInstance;
     }
 
-    private LogHandler(Context context,boolean create) {
-        //logDataSource = MockLogData.getInstance();
+    private LogHandler(Context context, boolean create) {
         logDataSource = new SQLLogData(context);
         mUnits = new ArrayList<String>();
         mFilter = new LogDataFilter();
@@ -47,14 +46,16 @@ public class LogHandler {
         logDataSource.addLog(log);
     }
 
-    public List<Log> getDateDescSortedLogs()
-    {
+    public List<Log> getDateDescSortedLogs() {
         List<Log> logs = getLogs();
         return mFilter.filterLogsByDateDesc(logs);
     }
 
-    public List<Item> getItems(Topic topic)
-    {
+    public List<Item> getItems(Topic topic) {
         return logDataSource.getItems(topic.getId());
+    }
+
+    public boolean deleteLog(int logId) {
+        return logDataSource.deleteLog(logId);
     }
 }

@@ -5,17 +5,19 @@ import java.util.Date;
 
 public class Log {
 
-	private String topic;
+    private int id;
+    private String topic;
 	private String item;
 	private int quantity;
 	private String quantityUnits;
 	private Date date;
 	private String description;
 
-	public Log(String topic, String item, int qty,
+    public Log(int id,String topic, String item, int qty,
                String units, String desc, Date date)
 	{
-		this.topic = topic;
+        this.id = id;
+        this.topic = topic;
 		this.item =item;
 		this.quantity = qty;
 		this.quantityUnits = units;
@@ -60,5 +62,9 @@ public class Log {
         String date =  df.format(this.date);
 
         return String.format("%s %s %s %s",item,date,quantity, quantityUnits);
+    }
+
+    public int getId() {
+        return id;
     }
 }

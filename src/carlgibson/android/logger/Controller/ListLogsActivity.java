@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import carlgibson.android.logger.R;
+import carlgibson.android.logger.model.Log;
 
 public class ListLogsActivity extends ListActivity {
 
@@ -21,16 +20,7 @@ public class ListLogsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_logs);
 
-        Button addLogButton = (Button) findViewById(R.id.buttonAddNewLog);
-        addLogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LaunchAddLogsActivity();
-            }
-        });
-
         mLogManager = LogHandler.getInstance(getApplicationContext());
-
         mAdapter = new LogAdapter(this, mLogManager.getDateDescSortedLogs());
         setListAdapter(mAdapter);
     }
@@ -53,26 +43,27 @@ public class ListLogsActivity extends ListActivity {
         }
     }
 
-    private void LaunchAddLogsActivity() {
-        Intent launchIntent = new Intent(ListLogsActivity.this,
-                AddLogActivity.class);
-        startActivityForResult(launchIntent, 0);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         mAdapter.swapData(mLogManager.getDateDescSortedLogs());
-        TextView view = (TextView)findViewById(R.id.textViewFilter);
-        view.setText("Total logs: " + mAdapter.getCount());
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id)
-    {
-        Intent launchIntent = new Intent(ListLogsActivity.this,
-                LogDetailsActivity.class);
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Log log = (Log) l.getItemAtPosition(position);
+        Intent launchIntent = new Intent(this, LogDetailsActivity.class);
+        launchIntent.putExtra("LogId", log.getId());
         startActivityForResult(launchIntent, 0);
+    }
+
+    public void onAddButtonClick(View v) {
+        launchNewActivity(AddLogActivity.class);
+    }
+
+    private void launchNewActivity(Class<?> activityClass){
+        Intent launchIntent = new Intent(this,activityClass);
+        startActivity(launchIntent);
     }
 
 }

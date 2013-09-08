@@ -33,13 +33,13 @@ public class LogDataFilterTests extends AndroidTestCase {
     {
 
         List<Log> logs = new ArrayList<Log>();
-        logs.add(new Log(null,null, 1, null, null, new Date(12,12,12)));
+        logs.add(new Log(0,null,null, 1, null, null, new Date(12,12,12)));
 
-        logs.add(new Log(null,null, 1, null, null, new Date(06,06,06)));
-        logs.add(new Log(null,null, 1, null, null, new Date(01,01,01)));
-        logs.add(new Log(null,null, 1, null, null, new Date(12,12,12)));
-        logs.add(new Log(null,null, 1, null, null, new Date(06,06,06)));
-        logs.add(new Log(null,null, 1, null, null, new Date(01,01,01)));
+        logs.add(new Log(0,null,null, 1, null, null, new Date(06,06,06)));
+        logs.add(new Log(0,null,null, 1, null, null, new Date(01,01,01)));
+        logs.add(new Log(0,null,null, 1, null, null, new Date(12,12,12)));
+        logs.add(new Log(0,null,null, 1, null, null, new Date(06,06,06)));
+        logs.add(new Log(0,null,null, 1, null, null, new Date(01,01,01)));
         List<Log> sorted = logs;
         sorted = sut.filterLogsByDateDesc(logs);
 

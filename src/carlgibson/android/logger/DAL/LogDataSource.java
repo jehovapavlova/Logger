@@ -19,7 +19,8 @@ public interface LogDataSource {
     List<Log> getLogs();
     List<Log> getLogs(int topicId);
     Log getLog(int id);
-    void addLog(Log log);
+    boolean addLog(Log log);
+    boolean deleteLog(int id);
 
     List<Topic> getTopics();
     Topic getTopicById(int id);
@@ -33,4 +34,5 @@ public interface LogDataSource {
     List<String> getUnits();
     Unit getUnitById(int id);
     void addUnit(Unit unit);
+
 }

@@ -23,5 +23,10 @@
     <string name="cancelLogEntry">Cancel</string>
     <string name="editLog">Edit</string>
     <string name="deleteLog">Delete</string>
+    <string name="menu_add_topic">Add topic</string>
+    <string name="menu_edit_topic">Edit Topic</string>
+    <string name="menu_edit_item">Edit Item</string>
+    <string name="menu_add_item">Add Item</string>
+    <string name="addPicture">Add picture</string>
 
 </resources>

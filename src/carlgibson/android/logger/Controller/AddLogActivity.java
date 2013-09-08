@@ -1,12 +1,13 @@
 package carlgibson.android.logger.Controller;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 import carlgibson.android.logger.R;
@@ -34,26 +35,8 @@ public class AddLogActivity extends FragmentActivity {
 
         setTopicSpinner();
         setItemSpinner();
-        setUnitSpinner();
         setDate();
         setTime();
-        setSaveButton();
-        setCancelButton();
-
-        mTopicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int pos, long id) {
-                setItemSpinner();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
-
-            }
-        });
     }
 
     private void setDate() {
@@ -75,13 +58,18 @@ public class AddLogActivity extends FragmentActivity {
         return textView;
     }
 
-    private void setUnitSpinner() {
+    private void setUnitSpinner(int selectionIndex, int defaultQty) {
+        // Set quantity value
+        EditText quantity = (EditText)findViewById(R.id.editTextQty);
+        quantity.setText(String.valueOf(defaultQty));
+        // Set units selection
         mUnitsSpinner = (Spinner) findViewById(R.id.spinnerUnit);
         ArrayAdapter<String> qtyAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
                 mLogManager.getUnits());
         qtyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mUnitsSpinner.setAdapter(qtyAdapter);
+        mUnitsSpinner.setSelection(selectionIndex);
     }
 
     private void setTopicSpinner() {
@@ -91,6 +79,18 @@ public class AddLogActivity extends FragmentActivity {
         topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mTopicSpinner.setAdapter(topicAdapter);
         mTopicSpinner.setSelection(0);
+        mTopicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                setItemSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private void setItemSpinner() {
@@ -100,37 +100,37 @@ public class AddLogActivity extends FragmentActivity {
                 android.R.layout.simple_spinner_item, mLogManager.getItems(topic));
         itemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mItemSpinner.setAdapter(itemAdapter);
-    }
-
-    private void setSaveButton() {
-        final Button saveButton = (Button) findViewById(R.id.buttonSave);
-        saveButton.setOnClickListener(new OnClickListener() {
+        mItemSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                mLogManager.addLogEntry(getLogEntryFromDetails());
-                finish();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Item item = (Item)mItemSpinner.getSelectedItem();
+                setUnitSpinner(item.getDefaultUnitId(),item.getDefaultQty());
             }
 
-            ;
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
-    private void setCancelButton() {
-        final Button cancelButton = (Button) findViewById(R.id.buttonCancel);
-        cancelButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
+    public void onSaveButtonClick(View v){
+        mLogManager.addLogEntry(getLogEntryFromDetails());
+        finish();
+    }
 
-            ;
-        });
+    public void onCancelButtonClick(View v){
+        finish();
+    }
+
+    public void onAddPictureClick(View v) {
+        Toast.makeText(this,"Add picture clicked",200).show();
+        // TODO Add picture selection functionality
     }
 
     private Log getLogEntryFromDetails() {
 
         Topic topic = (Topic) mTopicSpinner.getSelectedItem();
-        String item = (String) mItemSpinner.getSelectedItem();
+        Item item = (Item) mItemSpinner.getSelectedItem();
         TextView qty = (TextView) findViewById(R.id.editTextQty);
         int quantity = Integer.parseInt(qty.getText().toString());
         String units = (String) mUnitsSpinner.getSelectedItem();
@@ -141,13 +141,12 @@ public class AddLogActivity extends FragmentActivity {
         String timeString = time.getText().toString();
         Date dateTime = parseDateTime(dateString, timeString);
 
-        return new Log(topic.getName(), item, quantity, units, desc.getText().toString(), dateTime);
+        return new Log(0,topic.getName(), item.getName(), quantity, units, desc.getText().toString(), dateTime);
     }
 
     private Date parseDateTime(String date, String time) {
-        Date d = null;
+        Date d;
         String dateTime = date + time;
-        boolean result = true;
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("dd MMM yyyyHH:mm");
         try {
@@ -172,7 +171,7 @@ public class AddLogActivity extends FragmentActivity {
             numberPicker.setMinValue(1);
             numberPicker.setMaxValue(100);
         } else {
-
+             // TODO Add functionality to change number picker based on sdk version
         }
     }
 
@@ -181,6 +180,38 @@ public class AddLogActivity extends FragmentActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_log_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.action_addItem: onAddItemClick(item); return true;
+            case R.id.action_editItem: onEditItemClick(item); return true;
+            case R.id.action_addTopic: onAddTopicClick(item); return true;
+            case R.id.action_editTopic: onEditTopicClick(item); return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void onEditItemClick(MenuItem item) {
+        launchNewActivity(EditItemActivity.class);
+    }
+
+    public void onAddItemClick(MenuItem item) {
+        launchNewActivity(AddItemActivity.class);
+    }
+
+    public void onEditTopicClick(MenuItem item) {
+        // TODO Edit Topic activity
+    }
+
+    public void onAddTopicClick(MenuItem item) {
+        // TODO Add Topic activity
+    }
+
+    private void launchNewActivity(Class<?> activityClass){
+        Intent launchIntent = new Intent(this,activityClass);
+        startActivity(launchIntent);
     }
 
     public void onResume() {

@@ -1,9 +1,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
+            android:id="@+id/action_addItem"
+            android:orderInCategory="1"
+            android:showAsAction="never"
+            android:onClick="onAddItemClick"
+            android:title="@string/menu_add_item"/>
+    <item
+            android:id="@+id/action_editItem"
+            android:orderInCategory="2"
+            android:showAsAction="never"
+            android:onClick="onEditItemClick"
+            android:title="@string/menu_edit_item"/>
+    <item
+            android:id="@+id/action_addTopic"
+            android:orderInCategory="3"
+            android:showAsAction="never"
+            android:onClick="onAddTopicClick"
+            android:title="@string/menu_add_topic"/>
+    <item
+            android:id="@+id/action_editTopic"
+            android:orderInCategory="4"
+            android:showAsAction="never"
+            android:title="@string/menu_edit_topic"/>
 </menu>
