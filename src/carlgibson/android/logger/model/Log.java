@@ -13,6 +13,8 @@ public class Log {
 	private Date date;
 	private String description;
 
+    public final static String TIMEDATE_FORMAT = "HH:MM dd-MMM-yy";
+
     public Log(int id,String topic, String item, int qty,
                String units, String desc, Date date)
 	{

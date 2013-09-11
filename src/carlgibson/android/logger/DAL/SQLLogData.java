@@ -141,30 +141,9 @@ public class SQLLogData implements LogDataSource {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            int id = cursor.getInt(0);
-            Item item = getItemById(cursor.getInt(2));
-            Topic topic = item.getTopic();
-            Unit unit = getUnitById(cursor.getInt(3));
-            int qty = cursor.getInt(4);
-            String desc = cursor.getString(5);
-            String dateTime = cursor.getString(1);
-            Date date = null;
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyyHH:mm");
-            try {
-                date = sdf.parse(dateTime);
-            } catch (ParseException e) {
-                date = new Date();
-            }
+            logs.add(getLogFromCursorRow(cursor));
 
-            Log log = new Log(id,
-                    topic.getName(),
-                    item.getName(),
-                    qty,
-                    unit.getName(),
-                    desc,
-                    date);
-            logs.add(log);
             cursor.moveToNext();
         }
         closeDb();
@@ -179,8 +158,44 @@ public class SQLLogData implements LogDataSource {
 
     @Override
     public Log getLog(int id) {
-        return null;
+        Log log = null;
+        Cursor cursor = openReadable().query(dbHelper.LOGS, null, "_id = ?", new String[]{String.valueOf(id)}, null, null, null);
+
+        if (null !=cursor){
+            cursor.moveToFirst();
+            log = getLogFromCursorRow(cursor);
+        }
+        return log;
     }
+
+    private Log getLogFromCursorRow(Cursor cursor){
+        int id = cursor.getInt(0);
+        Item item = getItemById(cursor.getInt(2));
+        Topic topic = item.getTopic();
+        Unit unit = getUnitById(cursor.getInt(3));
+        int qty = cursor.getInt(4);
+        String desc = cursor.getString(5);
+        String dateTime = cursor.getString(1);
+        Date date = null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyyHH:mm");
+        try {
+            date = sdf.parse(dateTime);
+        } catch (ParseException e) {
+            date = new Date();
+        }
+
+        Log log = new Log(id,
+                topic.getName(),
+                item.getName(),
+                qty,
+                unit.getName(),
+                desc,
+                date);
+
+        return log;
+    }
+
 
     @Override
     public boolean addLog(Log log) {

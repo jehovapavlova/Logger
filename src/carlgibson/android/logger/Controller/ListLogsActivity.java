@@ -54,7 +54,7 @@ public class ListLogsActivity extends ListActivity {
         Log log = (Log) l.getItemAtPosition(position);
         Intent launchIntent = new Intent(this, LogDetailsActivity.class);
         launchIntent.putExtra("LogId", log.getId());
-        startActivityForResult(launchIntent, 0);
+        startActivity(launchIntent);
     }
 
     public void onAddButtonClick(View v) {

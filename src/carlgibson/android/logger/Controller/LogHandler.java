@@ -17,6 +17,7 @@ public class LogHandler {
     private DataFilter mFilter;
     private static LogHandler mInstance;
 
+
     public static LogHandler getInstance(Context context) {
         if (null == mInstance) {
             mInstance = new LogHandler(context, true);
@@ -36,6 +37,10 @@ public class LogHandler {
 
     public List<Log> getLogs() {
         return logDataSource.getLogs();
+    }
+
+    public Log getLog(int logId) {
+        return logDataSource.getLog(logId);
     }
 
     public List<String> getUnits() {
@@ -58,4 +63,5 @@ public class LogHandler {
     public boolean deleteLog(int logId) {
         return logDataSource.deleteLog(logId);
     }
+
 }
