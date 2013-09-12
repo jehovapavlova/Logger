@@ -200,22 +200,26 @@ public class SQLLogData implements LogDataSource {
     @Override
     public boolean addLog(Log log) {
         boolean result = false;
-        ContentValues values = new ContentValues();
-        values.put("time", log.getFormattedDate("dd MMM yyyyHH:mm"));
-        values.put("itemId", getItemId(log.getItem()));
-        values.put("unitId", getUnitId(log.getUnits()));
-        values.put("quantity", log.getQuantity());
-        values.put("description", log.getDescription());
-
+        ContentValues logValues = getContentValues(log);
         try {
             mDb = dbHelper.getWritableDatabase();
-            mDb.insert(dbHelper.LOGS, null, values);
+            mDb.insert(dbHelper.LOGS, null, logValues);
             mDb.close();
             result = true;
         } catch (Exception ex) {
 
         }
         return result;
+    }
+
+    private ContentValues getContentValues(Log log) {
+        ContentValues values = new ContentValues();
+        values.put("time", log.getFormattedDate("dd MMM yyyyHH:mm"));
+        values.put("itemId", getItemId(log.getItem()));
+        values.put("unitId", getUnitId(log.getUnits()));
+        values.put("quantity", log.getQuantity());
+        values.put("description", log.getDetails());
+        return values;
     }
 
     private int getUnitId(String unitsName) {
@@ -262,6 +266,18 @@ public class SQLLogData implements LogDataSource {
         try {
             mDb = dbHelper.getWritableDatabase();
             mDb.delete(dbHelper.LOGS, "_id = ?", new String[]{String.valueOf(id)});
+            result = true;
+        } catch (Exception ex) {
+        }
+        return result;
+    }
+
+    @Override
+    public boolean updateLog(Log log) {
+        boolean result = false;
+        try {
+            mDb = dbHelper.getWritableDatabase();
+            mDb.update(dbHelper.LOGS, getContentValues(log), "_id = ?", new String[]{String.valueOf(log.getId())});
             result = true;
         } catch (Exception ex) {
         }

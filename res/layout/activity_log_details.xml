@@ -65,13 +65,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="editLogClick"
                 android:text="@string/editLog"/>
         <Button
                 android:id="@+id/buttonDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="showDeleteAlert"
+                android:onClick="deleteLogClick"
                 android:text="@string/deleteLog"/>
     </LinearLayout>
 </LinearLayout>

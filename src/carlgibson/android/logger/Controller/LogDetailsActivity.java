@@ -3,6 +3,7 @@ package carlgibson.android.logger.Controller;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -31,22 +32,22 @@ public class LogDetailsActivity extends Activity {
         mLogId = getIntent().getIntExtra("LogId", -1);
         mLog = mLogHandler.getLog(mLogId);
 
-        setNameAndText(findViewById(R.id.topic_detail),R.string.topic,mLog.getTopic());
-        setNameAndText(findViewById(R.id.item_detail),R.string.item,mLog.getItem());
-        setNameAndText(findViewById(R.id.quantity_detail),R.string.quantity,mLog.getQuantity()+" "+mLog.getUnits());
-        setNameAndText(findViewById(R.id.time_detail),R.string.time,mLog.getFormattedDate(Log.TIMEDATE_FORMAT));
-        setNameAndText(findViewById(R.id.details_detail),R.string.details,mLog.getDescription());
+        setNameAndText(findViewById(R.id.topic_detail), R.string.topic, mLog.getTopic());
+        setNameAndText(findViewById(R.id.item_detail), R.string.item, mLog.getItem());
+        setNameAndText(findViewById(R.id.quantity_detail), R.string.quantity, mLog.getQuantity() + " " + mLog.getUnits());
+        setNameAndText(findViewById(R.id.time_detail), R.string.time, mLog.getFormattedDate(Log.TIMEDATE_FORMAT));
+        setNameAndText(findViewById(R.id.details_detail), R.string.details, mLog.getDetails());
     }
 
-    private void setNameAndText(View v, int nameId, String value){
-        TextView name = (TextView)v.findViewById(R.id.name);
-        TextView text = (TextView)v.findViewById(R.id.text);
+    private void setNameAndText(View v, int nameId, String value) {
+        TextView name = (TextView) v.findViewById(R.id.name);
+        TextView text = (TextView) v.findViewById(R.id.text);
         String s = getResources().getString(nameId);
         name.setText(s);
         text.setText(value);
     }
 
-    public void showDeleteAlert(View v) {
+    public void deleteLogClick(View v) {
         AlertDialog b = new AlertDialog.Builder(this)
                 .setTitle("Confirm delete")
                 .setMessage("Are you sure?")
@@ -68,5 +69,13 @@ public class LogDetailsActivity extends Activity {
         Toast.makeText(this, toastMessage, 20).show();
         finish();
     }
-    ;
+
+    public void editLogClick(View v) {
+        Intent launchIntent = new Intent(this, AddLogActivity.class);
+        launchIntent.putExtra(String.valueOf(R.string.log_edit_type),
+                LogHandler.LogEditType.Update.toString());
+        launchIntent.putExtra("LogId", mLogId);
+        startActivity(launchIntent);
+    }
+
 }

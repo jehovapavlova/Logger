@@ -11,19 +11,19 @@ public class Log {
 	private int quantity;
 	private String quantityUnits;
 	private Date date;
-	private String description;
+	private String details;
 
-    public final static String TIMEDATE_FORMAT = "HH:MM dd-MMM-yy";
+    public final static String TIMEDATE_FORMAT = "HH:mm dd-MMM-yy";
 
     public Log(int id,String topic, String item, int qty,
-               String units, String desc, Date date)
+               String units, String details, Date date)
 	{
         this.id = id;
         this.topic = topic;
 		this.item =item;
 		this.quantity = qty;
 		this.quantityUnits = units;
-		this.description = desc;
+		this.details = details;
 		this.date = date;
 	}
 
@@ -54,13 +54,13 @@ public class Log {
     }
 
 	
-	public String getDescription() {
-		return description;
+	public String getDetails() {
+		return details;
 	}
 
     @Override
     public String toString() {
-        SimpleDateFormat df = new SimpleDateFormat("HH:MM dd-MMM-yy");
+        SimpleDateFormat df = new SimpleDateFormat(TIMEDATE_FORMAT);
         String date =  df.format(this.date);
 
         return String.format("%s %s %s %s",item,date,quantity, quantityUnits);

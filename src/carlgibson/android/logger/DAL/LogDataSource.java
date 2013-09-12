@@ -21,6 +21,7 @@ public interface LogDataSource {
     Log getLog(int id);
     boolean addLog(Log log);
     boolean deleteLog(int id);
+    boolean updateLog(Log log);
 
     List<Topic> getTopics();
     Topic getTopicById(int id);

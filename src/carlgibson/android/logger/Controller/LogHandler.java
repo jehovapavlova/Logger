@@ -17,6 +17,11 @@ public class LogHandler {
     private DataFilter mFilter;
     private static LogHandler mInstance;
 
+    public void updateLog(Log log) {
+        logDataSource.updateLog(log);
+    }
+
+    public enum LogEditType {Add, Update}
 
     public static LogHandler getInstance(Context context) {
         if (null == mInstance) {

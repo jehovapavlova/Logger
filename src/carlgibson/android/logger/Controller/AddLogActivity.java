@@ -25,6 +25,7 @@ public class AddLogActivity extends FragmentActivity {
     private LogHandler mLogManager;
     private Spinner mTopicSpinner, mItemSpinner, mUnitsSpinner;
     private DialogFragment mDatePickerFragment, mTimePickerFragment;
+    private int mLogId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,41 +36,93 @@ public class AddLogActivity extends FragmentActivity {
 
         setTopicSpinner();
         setItemSpinner();
-        setDate();
-        setTime();
+        setUnitsSpinner();
+        setDate(null);
+        setTime(null);
+
+
+        Intent intent = getIntent();
+        String editType = intent.getStringExtra(String.valueOf(R.string.log_edit_type));
+        mLogId = intent.getIntExtra("LogId", 0);
+
+        if (editType.equals(LogHandler.LogEditType.Update.toString()) && mLogId > 0) {
+            setUpLogDetails(mLogId);
+            setEditButton();
+        }
     }
 
-    private void setDate() {
+    private void setUpLogDetails(int logId) {
+        Log log = mLogManager.getLog(logId);
+        setSpinnerByString(mTopicSpinner, log.getTopic());
+        setItemSpinner();
+        setUnitsSpinner();
+        setSpinnerByString(mItemSpinner, log.getItem());
+        setSpinnerByString(mUnitsSpinner, log.getUnits());
+        EditText qty = (EditText) findViewById(R.id.editTextQty);
+        qty.setText(String.valueOf(log.getQuantity()));
+        setDate(log.getFormattedDate("dd MMM yyyy"));
+        setTime(log.getFormattedDate("HH:mm"));
+        EditText details = (EditText) findViewById(R.id.editTextDetails);
+        details.setText(log.getDetails());
+        setEditButton();
+        setImages();
+        setTitle(R.string.editLogDetails);
+    }
+
+    private void setImages() {
+    }
+
+    private void setEditButton() {
+        Button button = (Button) findViewById(R.id.buttonSave);
+        button.setText("Save");
+    }
+
+    private void setSpinnerByString(Spinner spinner, String value) {
+        int position = 0;
+        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
+        for (int i = 0;i < adapter.getCount();i++){
+            Object obj = adapter.getItem(i);
+            position = (obj.toString().equals(value) ? i : position);
+        }
+        spinner.setSelection(position);
+    }
+
+    private void setDate(String date) {
         TextView dateText = (TextView) findViewById(R.id.textDatePicker);
-        dateText = FormatAndSetDate(dateText, "dd MMM yyyy");
+        if (null == date) {
+            dateText = formatAndSetDate(dateText, "dd MMM yyyy");
+        } else dateText.setText(date);
         mDatePickerFragment = new DatePickerFragment(dateText);
     }
 
-    private void setTime() {
+    private void setTime(String time) {
         TextView timeText = (TextView) findViewById(R.id.textTimePicker);
-        timeText = FormatAndSetDate(timeText, "HH:mm");
+        if (null == time) {
+            timeText = formatAndSetDate(timeText, "HH:mm");
+        } else timeText.setText(time);
         mTimePickerFragment = new TimePickerFragment(timeText);
     }
 
-    private TextView FormatAndSetDate(TextView textView, String format) {
+    private TextView formatAndSetDate(TextView textView, String format) {
         Calendar c = Calendar.getInstance(Locale.UK);
         SimpleDateFormat df = new SimpleDateFormat(format);
         textView.setText(df.format(c.getTime()));
         return textView;
     }
 
-    private void setUnitSpinner(int selectionIndex, int defaultQty) {
-        // Set quantity value
-        EditText quantity = (EditText)findViewById(R.id.editTextQty);
+    private void setQtyAndUnits(int selectionIndex, int defaultQty) {
+        EditText quantity = (EditText) findViewById(R.id.editTextQty);
         quantity.setText(String.valueOf(defaultQty));
-        // Set units selection
+        mUnitsSpinner.setSelection(selectionIndex);
+    }
+
+    private void setUnitsSpinner() {
         mUnitsSpinner = (Spinner) findViewById(R.id.spinnerUnit);
         ArrayAdapter<String> qtyAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
                 mLogManager.getUnits());
         qtyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mUnitsSpinner.setAdapter(qtyAdapter);
-        mUnitsSpinner.setSelection(selectionIndex);
     }
 
     private void setTopicSpinner() {
@@ -103,8 +156,8 @@ public class AddLogActivity extends FragmentActivity {
         mItemSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = (Item)mItemSpinner.getSelectedItem();
-                setUnitSpinner(item.getDefaultUnitId(),item.getDefaultQty());
+                Item item = (Item) mItemSpinner.getSelectedItem();
+                setQtyAndUnits(item.getDefaultUnitId(), item.getDefaultQty());
             }
 
             @Override
@@ -113,18 +166,38 @@ public class AddLogActivity extends FragmentActivity {
         });
     }
 
-    public void onSaveButtonClick(View v){
-        mLogManager.addLogEntry(getLogEntryFromDetails());
+    public void onSaveClick(View v) {
+        if (mLogId > 0) {
+            mLogManager.updateLog(getLogEntryFromDetails());
+        } else {
+            mLogManager.addLogEntry(getLogEntryFromDetails());
+        }
         finish();
     }
 
-    public void onCancelButtonClick(View v){
+    public void onCancelClick(View v) {
         finish();
     }
 
     public void onAddPictureClick(View v) {
-        Toast.makeText(this,"Add picture clicked",200).show();
+        Toast.makeText(this, "Add picture clicked", 200).show();
         // TODO Add picture selection functionality
+    }
+
+    public void onEditItemClick(MenuItem item) {
+        launchNewActivity(EditItemActivity.class);
+    }
+
+    public void onAddItemClick(MenuItem item) {
+        launchNewActivity(AddItemActivity.class);
+    }
+
+    public void onEditTopicClick(MenuItem item) {
+        // TODO Edit Topic activity
+    }
+
+    public void onAddTopicClick(MenuItem item) {
+        // TODO Add Topic activity
     }
 
     private Log getLogEntryFromDetails() {
@@ -141,7 +214,7 @@ public class AddLogActivity extends FragmentActivity {
         String timeString = time.getText().toString();
         Date dateTime = parseDateTime(dateString, timeString);
 
-        return new Log(0,topic.getName(), item.getName(), quantity, units, desc.getText().toString(), dateTime);
+        return new Log(mLogId, topic.getName(), item.getName(), quantity, units, desc.getText().toString(), dateTime);
     }
 
     private Date parseDateTime(String date, String time) {
@@ -171,7 +244,7 @@ public class AddLogActivity extends FragmentActivity {
             numberPicker.setMinValue(1);
             numberPicker.setMaxValue(100);
         } else {
-             // TODO Add functionality to change number picker based on sdk version
+            // TODO Add functionality to change number picker based on sdk version
         }
     }
 
@@ -183,40 +256,33 @@ public class AddLogActivity extends FragmentActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.action_addItem: onAddItemClick(item); return true;
-            case R.id.action_editItem: onEditItemClick(item); return true;
-            case R.id.action_addTopic: onAddTopicClick(item); return true;
-            case R.id.action_editTopic: onEditTopicClick(item); return true;
-            default: return super.onOptionsItemSelected(item);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_addItem:
+                onAddItemClick(item);
+                return true;
+            case R.id.action_editItem:
+                onEditItemClick(item);
+                return true;
+            case R.id.action_addTopic:
+                onAddTopicClick(item);
+                return true;
+            case R.id.action_editTopic:
+                onEditTopicClick(item);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
-    public void onEditItemClick(MenuItem item) {
-        launchNewActivity(EditItemActivity.class);
-    }
-
-    public void onAddItemClick(MenuItem item) {
-        launchNewActivity(AddItemActivity.class);
-    }
-
-    public void onEditTopicClick(MenuItem item) {
-        // TODO Edit Topic activity
-    }
-
-    public void onAddTopicClick(MenuItem item) {
-        // TODO Add Topic activity
-    }
-
-    private void launchNewActivity(Class<?> activityClass){
-        Intent launchIntent = new Intent(this,activityClass);
+    private void launchNewActivity(Class<?> activityClass) {
+        Intent launchIntent = new Intent(this, activityClass);
         startActivity(launchIntent);
     }
 
     public void onResume() {
         super.onResume();
-        setDate();
-        setTime();
+        setDate(null);
+        setTime(null);
     }
 }

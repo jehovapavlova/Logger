@@ -63,12 +63,12 @@ public class MockLogData implements LogDataSource {
 
     @Override
     public List<Log> getLogs(int topicId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public Log getLog(int id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -82,38 +82,41 @@ public class MockLogData implements LogDataSource {
     }
 
     @Override
+    public boolean updateLog(Log log) {
+        return false;
+    }
+
+    @Override
 	public List<Topic> getTopics() {
 		return mTopics;
 	}
 
     @Override
     public Topic getTopicById(int id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public void addTopic(Topic topic) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public List<Item> getItems() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<Item> getItems(int topicId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public Item getItemById(int id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public void addItem(Item item) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -123,12 +126,11 @@ public class MockLogData implements LogDataSource {
 
     @Override
     public Unit getUnitById(int id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public void addUnit(Unit unit) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void addMockLogs() {

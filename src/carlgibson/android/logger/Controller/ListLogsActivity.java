@@ -63,6 +63,8 @@ public class ListLogsActivity extends ListActivity {
 
     private void launchNewActivity(Class<?> activityClass){
         Intent launchIntent = new Intent(this,activityClass);
+        launchIntent.putExtra(String.valueOf(R.string.log_edit_type),
+                              LogHandler.LogEditType.Add.toString());
         startActivity(launchIntent);
     }
 
