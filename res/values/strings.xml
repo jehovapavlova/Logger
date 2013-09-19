@@ -30,4 +30,7 @@
     <string name="addPicture">Add picture</string>
     <string name="log_edit_type">LogEditType</string>
     <string name="editLogDetails">Edit Log Details</string>
+    <string name="date_format">dd MMM yyyy</string>
+    <string name="time_format">HH:mm</string>
+    <string name="date_time_format">dd MMM yyyyHH:mm</string>
 </resources>

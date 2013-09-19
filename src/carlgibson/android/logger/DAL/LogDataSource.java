@@ -32,7 +32,7 @@ public interface LogDataSource {
     Item getItemById(int id);
     void addItem(Item item);
 
-    List<String> getUnits();
+    List<Unit> getUnits();
     Unit getUnitById(int id);
     void addUnit(Unit unit);
 

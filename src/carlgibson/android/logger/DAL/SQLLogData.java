@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import carlgibson.android.logger.R;
 import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
@@ -24,9 +25,11 @@ public class SQLLogData implements LogDataSource {
 
     private final DBHelper dbHelper;
     private SQLiteDatabase mDb;
+    private Context mContext;
 
     public SQLLogData(Context context) {
-        dbHelper = new DBHelper(context);
+        mContext = context;
+        dbHelper = new DBHelper(mContext);
     }
 
     private SQLiteDatabase openReadable() {
@@ -49,7 +52,7 @@ public class SQLLogData implements LogDataSource {
             topics.add(topic);
             cursor.moveToNext();
         }
-        closeDb();
+
         return topics;
     }
 
@@ -60,7 +63,7 @@ public class SQLLogData implements LogDataSource {
         for (Topic t : getTopics()) {
             if (t.getId() == id) topic = t;
         }
-        closeDb();
+
         return topic;
     }
 
@@ -85,15 +88,16 @@ public class SQLLogData implements LogDataSource {
             items.add(item);
             cursor.moveToNext();
         }
-        closeDb();
+
         return items;
     }
 
     @Override
     public List<Item> getItems(int topicId) {
         List<Item> items = new ArrayList<Item>();
-        Cursor cursor = openReadable().query(dbHelper.ITEMS, null, "topicId = " + topicId, null, null, null, null);
+        String[] args = {String.valueOf(topicId)};
 
+        Cursor cursor = openReadable().query(dbHelper.ITEMS, null, "topicId = ?", args, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             String itemName = cursor.getString(1);
@@ -105,13 +109,14 @@ public class SQLLogData implements LogDataSource {
             items.add(item);
             cursor.moveToNext();
         }
-        closeDb();
+
         return items;
     }
 
     @Override
     public Item getItemById(int id) {
-        Cursor cursor = openReadable().query(dbHelper.ITEMS, null, "_id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        String[] args = {String.valueOf(id)};
+        Cursor cursor = openReadable().query(dbHelper.ITEMS, null, "_id = ?", args, null, null, null);
         cursor.moveToFirst();
         String itemName = cursor.getString(1);
         Integer qty = cursor.getInt(4);
@@ -119,16 +124,10 @@ public class SQLLogData implements LogDataSource {
         int unitId = cursor.getInt(3);
 
         Item item = new Item(itemName, qty, unitId, topic);
+
         return item;
     }
 
-    private int getItemId(String itemName) {
-        Cursor cursor = openReadable().query(dbHelper.ITEMS, null, "item = ?", new String[]{itemName}, null, null, null);
-        cursor.moveToFirst();
-        int itemId = cursor.getInt(0);
-        closeDb();
-        return itemId;
-    }
 
     @Override
     public void addItem(Item item) {
@@ -146,7 +145,6 @@ public class SQLLogData implements LogDataSource {
 
             cursor.moveToNext();
         }
-        closeDb();
 
         return logs;
     }
@@ -159,16 +157,95 @@ public class SQLLogData implements LogDataSource {
     @Override
     public Log getLog(int id) {
         Log log = null;
-        Cursor cursor = openReadable().query(dbHelper.LOGS, null, "_id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        String[] args = {String.valueOf(id)};
+        Cursor cursor = openReadable().query(dbHelper.LOGS, null, "_id = ?", args, null, null, null);
 
-        if (null !=cursor){
+        if (null != cursor) {
             cursor.moveToFirst();
             log = getLogFromCursorRow(cursor);
         }
+
         return log;
     }
 
-    private Log getLogFromCursorRow(Cursor cursor){
+
+    @Override
+    public boolean addLog(Log log) {
+        boolean result = false;
+        ContentValues logValues = getLogContentValues(log);
+        try {
+            mDb = dbHelper.getWritableDatabase();
+            mDb.insert(dbHelper.LOGS, null, logValues);
+
+            result = true;
+        } catch (Exception ex) {
+        }
+        return result;
+    }
+
+
+
+    @Override
+    public List<Unit> getUnits() {
+        List<Unit> units = new ArrayList<Unit>();
+        Cursor cursor = openReadable().query(dbHelper.UNITS, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Unit unit = new Unit(cursor.getInt(0), cursor.getString(1));
+            units.add(unit);
+            cursor.moveToNext();
+        }
+
+        return units;
+    }
+
+    @Override
+    public Unit getUnitById(int id) {
+        String[] args = {String.valueOf(id)};
+        Cursor cursor = openReadable().query(dbHelper.UNITS, null, "_id = ?", args, null, null, null);
+        cursor.moveToFirst();
+        Unit unit = new Unit(cursor.getInt(0), cursor.getString(1));
+
+        return unit;
+    }
+
+    @Override
+    public void addUnit(Unit unit) {
+    }
+
+    @Override
+    public boolean deleteLog(int id) {
+        return deleteFromDb(dbHelper.LOGS, id);
+    }
+
+    @Override
+    public boolean updateLog(Log log) {
+        boolean result = false;
+        String[] args = {String.valueOf(log.getId())};
+        try {
+            mDb = dbHelper.getReadableDatabase();
+            mDb.update(dbHelper.LOGS, getLogContentValues(log), "_id = ?", args);
+            result = true;
+        } catch (Exception ex) {
+        }
+        return result;
+    }
+
+    private boolean deleteFromDb(String tableName, int id) {
+        boolean result = false;
+        String[] args = {String.valueOf(id)};
+        try {
+            mDb = dbHelper.getWritableDatabase();
+            mDb.delete(tableName, "_id = ?", args);
+            result = true;
+        } catch (Exception ex) {
+        }
+
+        return result;
+    }
+
+    private Log getLogFromCursorRow(Cursor cursor) {
         int id = cursor.getInt(0);
         Item item = getItemById(cursor.getInt(2));
         Topic topic = item.getTopic();
@@ -176,9 +253,9 @@ public class SQLLogData implements LogDataSource {
         int qty = cursor.getInt(4);
         String desc = cursor.getString(5);
         String dateTime = cursor.getString(1);
-        Date date = null;
+        Date date;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyyHH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat(mContext.getString(R.string.date_time_format));
         try {
             date = sdf.parse(dateTime);
         } catch (ParseException e) {
@@ -196,25 +273,10 @@ public class SQLLogData implements LogDataSource {
         return log;
     }
 
+    private ContentValues getLogContentValues(Log log) {
 
-    @Override
-    public boolean addLog(Log log) {
-        boolean result = false;
-        ContentValues logValues = getContentValues(log);
-        try {
-            mDb = dbHelper.getWritableDatabase();
-            mDb.insert(dbHelper.LOGS, null, logValues);
-            mDb.close();
-            result = true;
-        } catch (Exception ex) {
-
-        }
-        return result;
-    }
-
-    private ContentValues getContentValues(Log log) {
         ContentValues values = new ContentValues();
-        values.put("time", log.getFormattedDate("dd MMM yyyyHH:mm"));
+        values.put("time", log.getFormattedDate(mContext.getString(R.string.date_time_format)));
         values.put("itemId", getItemId(log.getItem()));
         values.put("unitId", getUnitId(log.getUnits()));
         values.put("quantity", log.getQuantity());
@@ -223,64 +285,22 @@ public class SQLLogData implements LogDataSource {
     }
 
     private int getUnitId(String unitsName) {
-        Cursor cursor = openReadable().query(dbHelper.UNITS, null, "unit = ?", new String[]{unitsName}, null, null, null);
+        String[] args = {unitsName};
+        Cursor cursor = openReadable().query(dbHelper.UNITS, null, "unit = ?", args, null, null, null);
         cursor.moveToFirst();
         int unitId = cursor.getInt(0);
-        closeDb();
 
         return unitId;
     }
 
-
-    @Override
-    public List<String> getUnits() {
-        List<String> units = new ArrayList<String>();
-        Cursor cursor = openReadable().query(dbHelper.UNITS, null, null, null, null, null, null);
-
+    private int getItemId(String itemName) {
+        String[] args = {itemName};
+        Cursor cursor = openReadable().query(dbHelper.ITEMS, null, "item = ?", args, null, null, null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            String unitName = cursor.getString(1);
-            units.add(unitName);
-            cursor.moveToNext();
-        }
-        closeDb();
-        return units;
+        int itemId = cursor.getInt(0);
+
+        return itemId;
     }
 
-    @Override
-    public Unit getUnitById(int id) {
-        Cursor cursor = openReadable().query(dbHelper.UNITS, null, "_id = ?", new String[]{String.valueOf(id)}, null, null, null);
-        cursor.moveToFirst();
-        Unit unit = new Unit(cursor.getString(1), cursor.getInt(2));
 
-        return unit;
-    }
-
-    @Override
-    public void addUnit(Unit unit) {
-    }
-
-    @Override
-    public boolean deleteLog(int id) {
-        boolean result = false;
-        try {
-            mDb = dbHelper.getWritableDatabase();
-            mDb.delete(dbHelper.LOGS, "_id = ?", new String[]{String.valueOf(id)});
-            result = true;
-        } catch (Exception ex) {
-        }
-        return result;
-    }
-
-    @Override
-    public boolean updateLog(Log log) {
-        boolean result = false;
-        try {
-            mDb = dbHelper.getWritableDatabase();
-            mDb.update(dbHelper.LOGS, getContentValues(log), "_id = ?", new String[]{String.valueOf(log.getId())});
-            result = true;
-        } catch (Exception ex) {
-        }
-        return result;
-    }
 }

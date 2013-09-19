@@ -6,8 +6,8 @@
                 android:padding="5dp">
 
     <TextView android:id="@+id/itemRowText"
-              android:layout_height="wrap_content"
               android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
               android:layout_alignParentTop="true"
               android:layout_alignParentLeft="true"
               android:paddingBottom="10dp"
@@ -16,22 +16,22 @@
             />
 
     <TextView android:id="@+id/dateRowText"
-              android:layout_height="wrap_content"
               android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
               android:layout_alignParentTop="true"
               android:layout_alignParentRight="true"
               android:paddingRight="5dp"
             />
 
     <TextView android:id="@+id/qtyRowText"
-              android:layout_height="wrap_content"
               android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
               android:layout_alignParentLeft="true"
             />
     <TextView android:id="@+id/timeRowText"
-              android:layout_height="wrap_content"
               android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
               android:layout_alignParentBottom="true"
               android:layout_alignParentRight="true"
             />

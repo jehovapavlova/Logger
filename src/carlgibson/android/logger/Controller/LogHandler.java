@@ -6,6 +6,7 @@ import carlgibson.android.logger.DAL.SQLLogData;
 import carlgibson.android.logger.model.Item;
 import carlgibson.android.logger.model.Log;
 import carlgibson.android.logger.model.Topic;
+import carlgibson.android.logger.model.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,6 @@ public class LogHandler {
     private DataFilter mFilter;
     private static LogHandler mInstance;
 
-    public void updateLog(Log log) {
-        logDataSource.updateLog(log);
-    }
 
     public enum LogEditType {Add, Update}
 
@@ -48,7 +46,7 @@ public class LogHandler {
         return logDataSource.getLog(logId);
     }
 
-    public List<String> getUnits() {
+    public List<Unit> getUnits() {
         return logDataSource.getUnits();
     }
 
@@ -67,6 +65,10 @@ public class LogHandler {
 
     public boolean deleteLog(int logId) {
         return logDataSource.deleteLog(logId);
+    }
+
+    public Boolean updateLog(Log log) {
+        return logDataSource.updateLog(log);
     }
 
 }

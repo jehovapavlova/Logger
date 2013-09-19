@@ -12,7 +12,8 @@
             android:id="@+id/buttonAddNewLog"
             android:text="@string/title_activity_add_log_entry"
             android:layout_height="wrap_content"
-            android:onClick="onAddButtonClick"
             android:layout_width="fill_parent"
+            android:onClick="onAddButtonClick"
+            android:longClickable="true"
             android:layout_weight="0"/>
 </LinearLayout>

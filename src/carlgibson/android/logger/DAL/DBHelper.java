@@ -26,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String UNITS = "Units";
 
     private static final String UNITS_TABLE = "CREATE TABLE "+ UNITS +" ("
-            + COLUMN_ID + ", unit text NOT NULL, defaultValue integer NOT NULL)";
+            + COLUMN_ID + ", unit text NOT NULL)";
 
     private static final String TOPICS_TABLE = "CREATE TABLE "+TOPICS+" ("
             + COLUMN_ID + ", topic text NOT NULL)";
@@ -70,14 +70,15 @@ public class DBHelper extends SQLiteOpenHelper {
     private void fillTopics(SQLiteDatabase database) {
         ContentValues values = new ContentValues();
 
-        List<String> topics = new ArrayList<String>();
-        topics.add("Exercise");
-        topics.add("Food");
-        topics.add("Symptoms");
+        List<Object[]> topics = new ArrayList<Object[]>();
+        topics.add(new Object[]{1,"Exercise"});
+        topics.add(new Object[]{2,"Food"});
+        topics.add(new Object[]{3,"Symptoms"});
 
-        for (String topic: topics)
+        for (Object[] obj: topics)
         {
-            values.put("topic",topic);
+            values.put("_id",(Integer)obj[0]);
+            values.put("topic",(String)obj[1]);
             database.insert(TOPICS, null, values);
             values.clear();
         }
@@ -88,22 +89,23 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         List<Object[]> items = new ArrayList<Object[]>();
-        items.add(new Object[]{"Running",1,3,5});
-        items.add(new Object[]{"Swimming",1,7,20});
-        items.add(new Object[]{"Gym",1,0,45});
-        items.add(new Object[]{"Sandwich",2,2,300});
-        items.add(new Object[]{"Toast",2,4,300});
-        items.add(new Object[]{"Salad",2,5,300});
-        items.add(new Object[]{"Stomach ache",3,6,30});
-        items.add(new Object[]{"Headache",3,1,10});
-        items.add(new Object[]{"Hives",3,0,30});
+        items.add(new Object[]{1,"Running",1,4,5});
+        items.add(new Object[]{2,"Swimming",1,8,20});
+        items.add(new Object[]{3,"Gym",1,1,45});
+        items.add(new Object[]{4,"Sandwich",2,3,300});
+        items.add(new Object[]{5,"Toast",2,3,300});
+        items.add(new Object[]{6,"Salad",2,3,300});
+        items.add(new Object[]{7,"Stomach ache",3,1,30});
+        items.add(new Object[]{8,"Headache",3,7,1});
+        items.add(new Object[]{9,"Hives",3,2,1});
 
         for (Object[] obj: items)
         {
-            values.put("item",(String)obj[0]);
-            values.put("topicId",(Integer)obj[1]);
-            values.put("defaultUnitId",(Integer)obj[2]);
-            values.put("defaultQuantity",(Integer)obj[3]);
+            values.put("_id",(Integer)obj[0]);
+            values.put("item",(String)obj[1]);
+            values.put("topicId",(Integer)obj[2]);
+            values.put("defaultUnitId",(Integer)obj[3]);
+            values.put("defaultQuantity",(Integer)obj[4]);
 
             database.insert(ITEMS, null, values);
             values.clear();
@@ -116,20 +118,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
         List<Object[]> units = new ArrayList<Object[]>();
                 
-        units.add(new Object[]{1,"Minutes", 10});
-        units.add(new Object[]{2,"Hours",1});
-        units.add(new Object[]{3,"Calories",300});
-        units.add(new Object[]{4,"Miles",3});
-        units.add(new Object[]{5,"Metres",50});
-        units.add(new Object[]{6,"Kilometres",5});
-        units.add(new Object[]{7,"Each",1});
-        units.add(new Object[]{8,"Lengths",20});
+        units.add(new Object[]{1,"Minutes"});
+        units.add(new Object[]{2,"Hours"});
+        units.add(new Object[]{3,"Calories"});
+        units.add(new Object[]{4,"Miles"});
+        units.add(new Object[]{5,"Metres"});
+        units.add(new Object[]{6,"Kilometres"});
+        units.add(new Object[]{7,"Each"});
+        units.add(new Object[]{8,"Lengths"});
 
         for (Object[] obj: units)
         {
             values.put("_id",(Integer)obj[0]);
             values.put("unit",(String)obj[1]);
-            values.put("defaultValue",(Integer)obj[2]);
             database.insert(UNITS, null, values);
             values.clear();
         }

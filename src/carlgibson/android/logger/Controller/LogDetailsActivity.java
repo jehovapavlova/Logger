@@ -23,6 +23,7 @@ public class LogDetailsActivity extends Activity {
     private int mLogId;
     private LogHandler mLogHandler;
     private Log mLog;
+    static final int UPDATE_REQ_CODE = 1;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +52,14 @@ public class LogDetailsActivity extends Activity {
         AlertDialog b = new AlertDialog.Builder(this)
                 .setTitle("Confirm delete")
                 .setMessage("Are you sure?")
+                .setNegativeButton("Cancel", null)
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         manageDeleteLog();
                     }
                 })
-                .setNegativeButton("Cancel", null).create();
+                .create();
         b.show();
     }
 
@@ -66,16 +68,29 @@ public class LogDetailsActivity extends Activity {
         String toastMessage = (logAdapter.deleteLog(mLogId)) ?
                 "Log deleted" :
                 "Error deleting log";
-        Toast.makeText(this, toastMessage, 20).show();
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    public void editLogClick(View v) {
-        Intent launchIntent = new Intent(this, AddLogActivity.class);
-        launchIntent.putExtra(String.valueOf(R.string.log_edit_type),
+    public void onEditLogClick(View v) {
+        Intent launchIntent = new Intent(this, UpdateLogEditActivity.class);
+        launchIntent.putExtra(getString(R.string.log_edit_type),
                 LogHandler.LogEditType.Update.toString());
         launchIntent.putExtra("LogId", mLogId);
-        startActivity(launchIntent);
+        startActivityForResult(launchIntent,UPDATE_REQ_CODE);
+    }
+
+    public void onCancelLogClick(View v) {
+       finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UPDATE_REQ_CODE) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
     }
 
 }

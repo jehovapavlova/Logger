@@ -13,7 +13,7 @@ import carlgibson.android.logger.model.Log;
 public class ListLogsActivity extends ListActivity {
 
     protected LogHandler mLogManager;
-    private LogAdapter mAdapter;
+    private LogAdapter mLogAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,20 +21,18 @@ public class ListLogsActivity extends ListActivity {
         setContentView(R.layout.activity_list_logs);
 
         mLogManager = LogHandler.getInstance(getApplicationContext());
-        mAdapter = new LogAdapter(this, mLogManager.getDateDescSortedLogs());
-        setListAdapter(mAdapter);
+        mLogAdapter = new LogAdapter(this, mLogManager.getDateDescSortedLogs());
+        setListAdapter(mLogAdapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.list_logs_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
@@ -46,7 +44,7 @@ public class ListLogsActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mAdapter.swapData(mLogManager.getDateDescSortedLogs());
+        mLogAdapter.swapData(mLogManager.getDateDescSortedLogs());
     }
 
     @Override
@@ -58,7 +56,7 @@ public class ListLogsActivity extends ListActivity {
     }
 
     public void onAddButtonClick(View v) {
-        launchNewActivity(AddLogActivity.class);
+        launchNewActivity(AddLogEditActivity.class);
     }
 
     private void launchNewActivity(Class<?> activityClass){

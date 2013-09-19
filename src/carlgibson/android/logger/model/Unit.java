@@ -2,17 +2,18 @@ package carlgibson.android.logger.model;
 
 public class Unit {
     private final String name;
-    private final int defaultValue;
+    private final int id;
 
-    public Unit(String name, int defaultValue) {
+    public Unit( int id, String name) {
         this.name = name;
-        this.defaultValue = defaultValue;
+        this.id = id;
     }
 
     public String getName() { return this.name; }
-    public int getDefault() { return this.defaultValue; }
+    public int getId() { return this.id; }
 
-    public String ToString() {
-        return name;
+    @Override
+    public String toString() {
+        return getName();
     }
 }

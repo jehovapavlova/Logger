@@ -13,7 +13,7 @@ public class MockLogData implements LogDataSource {
 
     private List<Log> mLogs;
     private List<Topic> mTopics;
-    private List<String> mUnits;
+    private List<Unit> mUnits;
 
 
     private static MockLogData mInstance;
@@ -31,7 +31,7 @@ public class MockLogData implements LogDataSource {
     {
         mLogs = new ArrayList<Log>();
         mTopics = new ArrayList<Topic>();
-        mUnits = new ArrayList<String>();
+        mUnits = new ArrayList<Unit>();
 
         addMockTopics();
         addMockUnits();
@@ -39,14 +39,14 @@ public class MockLogData implements LogDataSource {
     }
 
     private void addMockUnits() {
-        mUnits.add("Minutes");
-        mUnits.add("Hours");
-        mUnits.add("Calories");
-        mUnits.add("Miles");
-        mUnits.add("Metres");
-        mUnits.add("Kilometres");
-        mUnits.add("Each");
-        mUnits.add("Lengths");
+        mUnits.add(new Unit(1,"Minutes"));
+        mUnits.add(new Unit(2,"Hours"));
+        mUnits.add(new Unit(3,"Calories"));
+        mUnits.add(new Unit(4,"Miles"));
+        mUnits.add(new Unit(5,"Metres"));
+        mUnits.add(new Unit(6,"Kilometres"));
+        mUnits.add(new Unit(7,"Each"));
+        mUnits.add(new Unit(8,"Lengths"));
     }
 
     private void addMockTopics() {
@@ -120,7 +120,7 @@ public class MockLogData implements LogDataSource {
     }
 
     @Override
-    public List<String> getUnits() {
+    public List<Unit> getUnits() {
         return mUnits;
     }
 

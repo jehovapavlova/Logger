@@ -11,7 +11,8 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/ScrollView01"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="wrap_content"
+                android:isScrollContainer="false" >
 
         <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -159,11 +160,13 @@
     </ScrollView>
 
     <LinearLayout
+            android:id="@+id/btnOpaqueLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true" android:alpha="100" android:baselineAligned="false"
-            >
+            android:layout_alignParentBottom="true"
+            android:background="#FF000000"
+            android:baselineAligned="false" android:layout_above="@+id/ScrollView01">
 
         <Button
                 android:id="@+id/buttonSave"
